@@ -9,36 +9,34 @@ import java.util.Scanner;
 
 public class PingClient {
 
-    private Socket clientSocket;
-    private PrintWriter request;
-    private BufferedReader response;
+    Socket clientSocket;
 
-
-    public void startConnection(String ip, int port) throws IOException {
-        clientSocket = new Socket(ip, port);
-        request = new PrintWriter(clientSocket.getOutputStream(), true);
-        response = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    public void connect(String ip, int port) throws IOException {
+        this.clientSocket = new Socket(ip, port);
     }
 
-    public String sendMessage(String msg) throws IOException {
-        request.println(msg);
-        String serverResponse = response.readLine();
-        return serverResponse;
+    public void send(String message) throws IOException {
+        PrintWriter request = new PrintWriter(clientSocket.getOutputStream(), true);
+        request.println(message);
+        BufferedReader response = new BufferedReader(
+                new InputStreamReader(clientSocket.getInputStream())
+        );
+
+        String line = response.readLine();
+        System.out.println(line);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         PingClient client = new PingClient();
-        client.startConnection("127.0.0.1", 5000);
+        client.connect("127.0.0.1", 6000);
 
         Scanner scanner = new Scanner(System.in);
-        while (true){
-            String input = scanner.nextLine();
-            if(input.equals("bye")) break;
-            System.out.println(client.sendMessage(input));
+        while(true) {
+            String line = scanner.nextLine();
+            if(line.equals("bye"))
+                break;
+            client.send(line);
         }
-
-/*        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        System.out.println(client.sendMessage(input));*/
     }
 }
+

@@ -10,57 +10,70 @@ import java.net.SocketException;
 
 public class PingServer {
 
-    private ServerSocket server;
     private final int port;
-    private int count;
 
     public PingServer(int port) {
         this.port = port;
     }
 
-    private void start() throws IOException {
-        server = new ServerSocket(port);
-        System.out.println("Server started...");
-        listenAndRespond();
+    public void start() throws IOException {
+        ServerSocket serverSocket = new ServerSocket(port);
+        System.out.println("Server listening at 127.0.0.1:"+port);
+//        listenAndRespond(serverSocket);
+        listenAndRespondAndAutoDisconnect(serverSocket);
     }
 
-    private void listenAndRespond() throws IOException {
+    public void listenAndRespond(ServerSocket serverSocket) throws IOException {
         Socket clientSocket = null;
         BufferedReader request = null;
         PrintWriter response = null;
         try{
-            while(!server.isClosed()) {
-                clientSocket = server.accept(); //listening, BLocking I/O
-                System.out.println(++count+" Client connected...");
+            clientSocket = serverSocket.accept();
+            System.out.println("Client connected....");
+            request = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            response = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                request = new BufferedReader(
-                        new InputStreamReader(clientSocket.getInputStream())
-                );
-
-                response = new PrintWriter(clientSocket.getOutputStream(), true);
-
-                String inputLine;
-                while ((inputLine = request.readLine()) != null) {
-                    System.out.println("From Client: "+inputLine);
-                    response.println("From Server: "+inputLine.toUpperCase());
-                }
+            String line;
+            while((line = request.readLine()) != null) {
+                System.out.println(line);
+                response.println("Response: "+line.toUpperCase());
             }
-        }catch (SocketException se){
-            releaseDisconnectedClient(clientSocket, request, response);
-            listenAndRespond();
+        } catch (SocketException e) {
+            closeClientConnection(clientSocket, request, response);
+            listenAndRespond(serverSocket);
         }
     }
 
-    private void releaseDisconnectedClient(Socket clientSocket, BufferedReader request, PrintWriter response) throws IOException {
-        count--;
-        System.out.println("Client disconnected");
+    private void closeClientConnection(Socket clientSocket, BufferedReader request, PrintWriter response) throws IOException {
         if(request != null) request.close();
         if(response != null) response.close();
         if(clientSocket != null) clientSocket.close();
     }
 
+    /**
+     * Using try with Resource for auto closing Socket, BufferedReader and PrintWriter
+     * Basically Socket, BufferedReader, PrintWriter implements Closeable interface
+     * So when the try block exists, the resources will be automatically closed
+     */
+    public void listenAndRespondAndAutoDisconnect(ServerSocket serverSocket) {
+        while(!serverSocket.isClosed()) {
+            try(Socket socket = serverSocket.accept();
+                BufferedReader request = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter response = new PrintWriter(socket.getOutputStream(), true)) {
+
+                String line;
+                while((line = request.readLine()) != null) {
+                    System.out.println(line);
+                    response.println("Response: "+line.toUpperCase());
+                }
+            } catch (IOException e) {
+                System.out.println("Client Disconnected...");
+            }
+        }
+    }
+
     public static void main(String[] args) throws IOException {
-        PingServer server1 = new PingServer(5000);
-        server1.start();
+        PingServer pingServer = new PingServer(6000);
+        pingServer.start();
     }
 }

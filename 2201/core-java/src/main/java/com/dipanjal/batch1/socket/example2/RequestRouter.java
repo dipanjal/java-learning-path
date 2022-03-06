@@ -8,7 +8,7 @@ public class RequestRouter {
     private static final String INDEX = "/";
     private static final String WELCOME = "/welcome";
 
-    public void routePath(String path, PrintWriter response) {
+    public void route(String path, PrintWriter response) {
         response.println("HTTP/1.1 200 OK");
         response.println("Content-Type: text/html");
         response.println(); // \r\n

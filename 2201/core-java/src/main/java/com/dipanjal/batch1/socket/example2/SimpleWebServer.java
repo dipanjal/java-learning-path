@@ -7,12 +7,13 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.time.LocalDateTime;
 
 public class SimpleWebServer {
 
-    private ServerSocket server;
     private final int port;
     private final RequestRouter router;
+    private int clientCount = 1;
 
     public SimpleWebServer(int port){
         this.port = port;
@@ -20,47 +21,44 @@ public class SimpleWebServer {
     }
 
     public void start() throws IOException {
-        this.server = new ServerSocket(port);
+        ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("Web Server Started...");
-        listenAndRespond();
+        listenAndRespond(serverSocket);
     }
 
-    private void listenAndRespond() throws IOException {
+    private void listenAndRespond(ServerSocket serverSocket) throws IOException {
         Socket client = null;
         BufferedReader request = null;
         PrintWriter response = null;
 
-        try{
-            while(!server.isClosed()) {
-                client = server.accept(); //accepting the clients
-                System.out.println("Client connected...");
-
+        while (!serverSocket.isClosed()) {
+            try {
+                client = serverSocket.accept(); //accepting the clients
+                System.out.printf("Client (%d) connected at %s%n", clientCount++, LocalDateTime.now());
                 request = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 int lineNo = 1;
-                String line = request.readLine();
+                String line;
                 String path = "";
-                while(!line.isEmpty()) {
+                while((line = request.readLine()) != null && !line.isEmpty()) {
                     if(lineNo == 1) {
                         path = extractPathFromLine(line);
                     }
                     System.out.println("From Client: "+line);
-                    line = request.readLine();
                     lineNo++;
                 }
                 response = new PrintWriter(client.getOutputStream(), true);
-                sendHttpResponse(path, response);
-//                Thread.sleep(10000);
+                router.route(path, response);
+                setDelay(5);
                 closeClientConnection(client, request, response);
+            } catch (SocketException se) {
+                closeClientConnection(client, request, response);
+                System.out.println("--------------");
             }
-        }catch (SocketException se) {
-            closeClientConnection(client, request, response);
-            System.out.println("--------------");
-            listenAndRespond();
         }
     }
 
     private String extractPathFromLine(String line) {
-        if(line.startsWith("GET") || line.startsWith("POST")) {
+        if(line.startsWith("GET")) {
             String[] parts = line.trim().split(" ");
             return parts[1];
         }
@@ -74,8 +72,17 @@ public class SimpleWebServer {
         if(client != null) client.close();
     }
 
-    private void sendHttpResponse(String path, PrintWriter response) {
-        router.routePath(path, response);
+    private void closeClientConnection(Socket client) throws IOException {
+        System.out.println("Client disconnected");
+        if(client != null) client.close();
+    }
+
+    private void setDelay(long sec) {
+        try {
+            Thread.sleep(sec * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) throws IOException {
