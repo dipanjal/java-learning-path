@@ -1,4 +1,6 @@
-package com.dipanjal.batch1.socket.example2;
+package com.dipanjal.batch1.socket.example2.sync;
+
+import com.dipanjal.batch1.socket.example2.RequestRouter;
 
 import java.io.BufferedReader;
 import java.io.IOException;

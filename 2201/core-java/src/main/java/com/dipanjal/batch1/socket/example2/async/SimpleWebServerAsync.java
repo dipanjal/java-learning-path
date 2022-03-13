@@ -10,12 +10,10 @@ import java.time.LocalDateTime;
 public class SimpleWebServerAsync {
 
     private final int port;
-    private final RequestRouter router;
     private int clientCount = 1;
 
     public SimpleWebServerAsync(int port){
         this.port = port;
-        this.router = new RequestRouter();
     }
 
     public void start() throws IOException {
@@ -33,7 +31,7 @@ public class SimpleWebServerAsync {
      }
 
     private void startClientRequestHandlerThread(Socket clientSocket) {
-        Thread clientHandlerThread = new Thread(new HTTPRequestHandler(clientSocket, router));
+        Thread clientHandlerThread = new Thread(new HTTPRequestHandler(clientSocket));
         clientHandlerThread.setName("Client "+ clientCount++);
         clientHandlerThread.start();
     }

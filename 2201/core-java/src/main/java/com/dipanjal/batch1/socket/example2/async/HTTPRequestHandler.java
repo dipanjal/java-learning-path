@@ -1,6 +1,8 @@
 package com.dipanjal.batch1.socket.example2.async;
 
 import com.dipanjal.batch1.socket.example2.RequestRouter;
+import com.dipanjal.batch1.socket.example2.controller.SimpleServletDispatcher;
+import com.dipanjal.batch1.socket.example2.factory.ControllerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,11 +13,9 @@ import java.net.Socket;
 public class HTTPRequestHandler implements Runnable {
 
     private final Socket socket;
-    private final RequestRouter router;
 
-    public HTTPRequestHandler(Socket socket, RequestRouter router) {
+    public HTTPRequestHandler(Socket socket) {
         this.socket = socket;
-        this.router = router;
     }
 
     @Override
@@ -39,14 +39,21 @@ public class HTTPRequestHandler implements Runnable {
                 lineNo++;
                 line = request.readLine();
             }
-            router.route(path, response);
-            closeClientConnection(socket, request, response);
+            this.route(path, request, response);
             setDelay(5);
+
             System.out.println(currentThreadName+" Disconnected");
         } catch (IOException e) {
             System.out.println(currentThreadName+" Disconnected");
             closeClientConnection(socket);
         }
+    }
+
+    private void route(String path, BufferedReader request, PrintWriter response) {
+        SimpleServletDispatcher controller = ControllerFactory.getController(path);
+        System.out.println(controller);
+        controller.dispatch(path, request, response);
+        closeClientConnection(socket, request, response);
     }
 
     private void setDelay(long sec) {
