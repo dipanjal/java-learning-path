@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.nio.charset.CharsetEncoder;
 import java.util.List;
 
 public class JSONController implements SimpleServletDispatcher {
