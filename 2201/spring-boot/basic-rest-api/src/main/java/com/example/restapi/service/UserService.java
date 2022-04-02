@@ -22,12 +22,12 @@ public class UserService {
     }
 
 
-    public UserDTO getUserById(long id) throws Exception {
+    public UserDTO getUserById(long id) throws RuntimeException {
         for(UserDTO userDTO : userDTOList) {
             if(userDTO.getId() == id) {
                 return userDTO;
             }
         }
-        throw new Exception("User not found");
+        throw new RuntimeException("User not found");
     }
 }

@@ -18,15 +18,16 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/users")
-    public List<UserDTO> fetchUsers() {
+    public ResponseEntity<List<UserDTO>> fetchUsers() {
 //        UserService userService = new UserService();
         System.out.println(userService);
-        return userService.getUsers();
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDTO> fetchUser(@PathVariable long id) {
-        try {
+        return ResponseEntity.ok(userService.getUserById(id));
+        /*try {
             UserDTO userDTO = userService.getUserById(id);
             return ResponseEntity
                     .ok()
@@ -43,7 +44,13 @@ public class UserController {
                     .status(HttpStatus.NOT_FOUND)
                     .header("message", e.getMessage())
                     .build();
-        }
+        }*/
+    }
+
+
+    @GetMapping("/users/rand")
+    public ResponseEntity<?> aRandomHandler() {
+        throw new RuntimeException("Exception Thrown from Controller");
     }
 //
 //    @PostMapping(value="/users", consumes = )
