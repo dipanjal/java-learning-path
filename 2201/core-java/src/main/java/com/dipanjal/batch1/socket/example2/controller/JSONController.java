@@ -1,6 +1,5 @@
 package com.dipanjal.batch1.socket.example2.controller;
 
-import com.dipanjal.batch1.annotation.MyController;
 import com.dipanjal.batch1.socket.example2.factory.ControllerFactory;
 import com.dipanjal.batch1.socket.example2.model.ApiError;
 import com.dipanjal.batch1.socket.example2.model.UserDTO;
@@ -9,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.nio.charset.CharsetEncoder;
 import java.util.List;
 
 //@MyController
