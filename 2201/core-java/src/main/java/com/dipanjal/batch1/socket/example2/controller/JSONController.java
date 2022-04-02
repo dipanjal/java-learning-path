@@ -1,5 +1,6 @@
 package com.dipanjal.batch1.socket.example2.controller;
 
+import com.dipanjal.batch1.annotation.MyController;
 import com.dipanjal.batch1.socket.example2.factory.ControllerFactory;
 import com.dipanjal.batch1.socket.example2.model.ApiError;
 import com.dipanjal.batch1.socket.example2.model.UserDTO;
@@ -11,6 +12,7 @@ import java.io.PrintWriter;
 import java.nio.charset.CharsetEncoder;
 import java.util.List;
 
+//@MyController
 public class JSONController implements SimpleServletDispatcher {
 
     private final String GET_USER;

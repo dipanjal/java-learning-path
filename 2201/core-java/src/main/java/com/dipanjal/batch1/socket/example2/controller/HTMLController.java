@@ -1,10 +1,12 @@
 package com.dipanjal.batch1.socket.example2.controller;
 
+import com.dipanjal.batch1.annotation.MyController;
 import com.dipanjal.batch1.socket.example2.factory.ControllerFactory;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 
+//@MyController
 public class HTMLController implements SimpleServletDispatcher {
 
     private final String USER_HOME;
