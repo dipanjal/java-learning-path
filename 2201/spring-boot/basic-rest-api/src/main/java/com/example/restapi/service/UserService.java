@@ -1,5 +1,8 @@
 package com.example.restapi.service;
 
+import com.example.restapi.aop.EnableLogging;
+import com.example.restapi.exception.InvalidArgumentException;
+import com.example.restapi.exception.RecordNotFoundException;
 import com.example.restapi.model.UserDTO;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +20,22 @@ public class UserService {
         userDTOList.add(new UserDTO(2,"Sam", 27));
     }
 
-    public List<UserDTO> getUsers() {
+    @EnableLogging
+    public List<UserDTO> getUsers() throws InterruptedException {
+        Thread.sleep(30000);
         return userDTOList;
     }
 
 
-    public UserDTO getUserById(long id) throws RuntimeException {
+    public UserDTO getUserById(long id) throws RecordNotFoundException {
+        if(id < 1)
+            throw new InvalidArgumentException("Invalid User id");
+
         for(UserDTO userDTO : userDTOList) {
             if(userDTO.getId() == id) {
                 return userDTO;
             }
         }
-        throw new RuntimeException("User not found");
+        throw new RecordNotFoundException("User not found");
     }
 }

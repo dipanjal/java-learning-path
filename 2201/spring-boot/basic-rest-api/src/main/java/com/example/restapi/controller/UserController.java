@@ -1,61 +1,39 @@
 package com.example.restapi.controller;
 
+import com.example.restapi.aop.EnableLogging;
 import com.example.restapi.model.UserDTO;
 import com.example.restapi.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
-@RestController //another injectable bean
+@RestController
 public class UserController {
 
-    @Autowired //inject here
-    private UserService userService;
+    private final UserService userService;
 
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @EnableLogging
     @GetMapping("/users")
-    public ResponseEntity<List<UserDTO>> fetchUsers() {
-//        UserService userService = new UserService();
-        System.out.println(userService);
+    public ResponseEntity<List<UserDTO>> fetchUsers() throws InterruptedException {
         return ResponseEntity.ok(userService.getUsers());
     }
 
+    @EnableLogging
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDTO> fetchUser(@PathVariable long id) {
         return ResponseEntity.ok(userService.getUserById(id));
-        /*try {
-            UserDTO userDTO = userService.getUserById(id);
-            return ResponseEntity
-                    .ok()
-                    .header("message", "User found")
-                    .body(userDTO);
-        }
-        catch (NullPointerException e) {
-            return ResponseEntity.internalServerError()
-                    .header("message", "Internal Server Error!!")
-                    .build();
-        }
-        catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .header("message", e.getMessage())
-                    .build();
-        }*/
     }
 
-
+    @EnableLogging
     @GetMapping("/users/rand")
     public ResponseEntity<?> aRandomHandler() {
         throw new RuntimeException("Exception Thrown from Controller");
     }
-//
-//    @PostMapping(value="/users", consumes = )
-//    public UserDTO registerNewUser(@RequestBody UserRequest userRequest) {
-//        //
-//    }
 
 }
