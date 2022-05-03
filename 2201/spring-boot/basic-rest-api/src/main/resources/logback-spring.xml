@@ -4,8 +4,8 @@
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
 
     <springProperty scope="context" name="applicationName" source="spring.application.name"/>
-    <springProperty scope="context" name="elasticSearchHost" source="spring.elasticsearch.uris"/>
-    <springProperty scope="context" name="logstashHost" source="mysql-to-es.logstash.host"/>
+    <springProperty scope="context" name="elasticSearchHost" source="user-service.logstash.es-host"/>
+    <springProperty scope="context" name="logstashHost" source="user-service.logstash.host"/>
 
     <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
         <destination>${logstashHost}</destination>
