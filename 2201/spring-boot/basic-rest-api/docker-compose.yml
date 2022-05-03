@@ -1,0 +1,67 @@
+version: '3.9'
+services:
+  zipkin-storage:
+    image: mysql:5.7
+    container_name: zipkin-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: zipkin
+    volumes:
+      - zipkin-mysql-data:/var/lib/mysql
+      - ./zipkin-mysql/DDL.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+  zipkin-server:
+    depends_on:
+      - zipkin-storage
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      STORAGE_TYPE: mysql
+#      MYSQL_HOST: zipkin-mysql
+#      MYSQL_DB: zipkin
+      MYSQL_JDBC_URL: jdbc:mysql://zipkin-storage:3306/zipkin
+      MYSQL_USER: root
+      MYSQL_PASS: root
+#  dependencies:
+#    image: openzipkin/zipkin-dependencies
+#    container_name: dependencies_zipkin
+#    environment:
+#      - STORAGE_TYPE=elasticsearch
+#      - ES_HOSTS=13.250.43.135:9200
+volumes:
+  zipkin-mysql-data: {}
+
+
+#version: '2'
+#services:
+#  # Switch storage type to Elasticsearch
+##  zipkin:
+##    image: openzipkin/zipkin
+##    container_name: zipkin
+##    environment:
+##      STORAGE_TYPE: elasticsearch
+##      # Point the zipkin at the storage backend
+##      ES_HOSTS: 13.250.43.135:9200
+##      # Uncomment to see requests to and from elasticsearch
+##      # - ES_HTTP_LOGGING=BODY
+#  zipkin:
+#    image: openzipkin/zipkin
+#    container_name: zipkin
+#    depends_on:
+#      - dependencies
+#    environment:
+#      - STORAGE_TYPE=elasticsearch
+#      - ES_HOSTS=13.250.43.135:9200
+#    ports:
+#      - "9411:9411"
+#    restart: unless-stopped
+#
+#  dependencies:
+#    image: openzipkin/zipkin-dependencies
+#    container_name: dependencies_zipkin
+#    environment:
+#      - STORAGE_TYPE=elasticsearch
+#      - ES_HOSTS=13.250.43.135:9200

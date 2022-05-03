@@ -5,6 +5,8 @@ public class UserDTO {
     private String name;
     private int age;
 
+    public UserDTO() {}
+
     public UserDTO(long id, String name, int age) {
         this.id = id;
         this.name = name;
