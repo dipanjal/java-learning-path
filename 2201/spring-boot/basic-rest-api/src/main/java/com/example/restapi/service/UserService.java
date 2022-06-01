@@ -1,41 +1,47 @@
 package com.example.restapi.service;
 
 import com.example.restapi.aop.EnableLogging;
-import com.example.restapi.exception.InvalidArgumentException;
+import com.example.restapi.entity.UserEntity;
 import com.example.restapi.exception.RecordNotFoundException;
 import com.example.restapi.model.UserDTO;
+import com.example.restapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service //injectable bean
 public class UserService {
 
-    private final List<UserDTO> userDTOList;
+    private final UserRepository userRepository;
 
-    public UserService() {
-        this.userDTOList = new ArrayList<>();
-        userDTOList.add(new UserDTO(1,"Henry", 24));
-        userDTOList.add(new UserDTO(2,"Sam", 27));
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @EnableLogging
     public List<UserDTO> getUsers() throws InterruptedException {
-        Thread.sleep(30000);
-        return userDTOList;
+        List<UserEntity> userEntities = userRepository.findAll();
+        List<UserDTO> dtoList = new ArrayList<>();
+        for(UserEntity entity : userEntities) {
+            dtoList.add(this.mapToDTO(entity));
+        }
+        return dtoList;
     }
 
 
     public UserDTO getUserById(long id) throws RecordNotFoundException {
-        if(id < 1)
-            throw new InvalidArgumentException("Invalid User id");
+        UserEntity entity = userRepository.getById(id);
+        return this.mapToDTO(entity);
+    }
 
-        for(UserDTO userDTO : userDTOList) {
-            if(userDTO.getId() == id) {
-                return userDTO;
-            }
-        }
-        throw new RecordNotFoundException("User not found");
+    private UserDTO mapToDTO(UserEntity entity) {
+        return new UserDTO(
+                entity.getId(),
+                entity.getName(),
+                entity.getEmail()
+        );
     }
 }

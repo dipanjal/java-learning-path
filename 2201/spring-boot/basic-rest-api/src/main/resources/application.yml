@@ -1,0 +1,9 @@
+server:
+  port: ${APP_PORT:8080}
+
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/java-2201}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver

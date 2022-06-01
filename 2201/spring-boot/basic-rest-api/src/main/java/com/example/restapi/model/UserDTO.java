@@ -3,12 +3,12 @@ package com.example.restapi.model;
 public class UserDTO {
     private long id;
     private String name;
-    private int age;
+    private String email;
 
-    public UserDTO(long id, String name, int age) {
+    public UserDTO(long id, String name, String email) {
         this.id = id;
         this.name = name;
-        this.age = age;
+        this.email = email;
     }
 
     public long getId() {
@@ -27,11 +27,11 @@ public class UserDTO {
         this.name = name;
     }
 
-    public int getAge() {
-        return age;
+    public String getEmail() {
+        return email;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

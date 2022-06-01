@@ -1,0 +1,41 @@
+# build docker image from a Dockerfile
+docker build -t basic-rest-api:latest .
+
+# list all docker images
+docker image ls
+
+# run as a docker container with host:container port mapping
+docker run --publish 8080:8080 basic-rest-api:latest
+
+# list running docker containers
+docker ps
+
+# list all docker containers
+docker ps -a
+
+# stop a docker container by id
+docker stop <container-id>
+
+# run mysql docker container with some environment variables like MYSQL_ROOT_PASSWORD
+docker run -p 3306:3306  --name user-mysql-1 -e MYSQL_ROOT_PASSWORD=root mysql:5.7
+
+# enter into a docker container
+docker exec -it 24e649b0f475 bash
+
+
+------------------[Mysql Commands]-------------------------
+#create a schema
+create schema `java-2201`;
+
+create table users
+(
+    id    bigint auto_increment,
+    name  varchar(255) null,
+    email varchar(255) null,
+    constraint users_pk
+        primary key (id)
+);
+
+create unique index users_id_uindex
+    on users (id);
+
