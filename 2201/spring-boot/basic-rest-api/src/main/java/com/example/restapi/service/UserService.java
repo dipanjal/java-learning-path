@@ -22,7 +22,7 @@ public class UserService {
     }
 
     @EnableLogging
-    public List<UserDTO> getUsers() throws InterruptedException {
+    public List<UserDTO> getUsers() {
         List<UserEntity> userEntities = userRepository.findAll();
         List<UserDTO> dtoList = new ArrayList<>();
         for(UserEntity entity : userEntities) {
