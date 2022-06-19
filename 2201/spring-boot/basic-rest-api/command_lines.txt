@@ -32,7 +32,7 @@ docker exec -it 24e649b0f475 bash
 ------------------[Mysql Commands]-------------------------
 #create a schema
 create schema `java-2201`;
-
+use `java-2201`;
 create table users
 (
     id    bigint auto_increment,
@@ -41,13 +41,9 @@ create table users
     constraint users_pk
         primary key (id)
 );
-
-create unique index users_id_uindex
-    on users (id);
-
-java-2201> INSERT INTO `java-2201`.users (name, email) VALUES ('Jhon Doe', 'jhon@xyz.com')
-[2022-06-05 22:16:04] 1 row affected in 30 ms
-java-2201> INSERT INTO `java-2201`.users (name, email) VALUES ('Eric Clapton', 'eric@xyz.com')
+create unique index users_id_uindex on users (id);
+INSERT INTO `java-2201`.users (name, email) VALUES ('Jhon Doe', 'jhon@xyz.com');
+INSERT INTO `java-2201`.users (name, email) VALUES ('Eric Clapton', 'eric@xyz.com');
 
 
 

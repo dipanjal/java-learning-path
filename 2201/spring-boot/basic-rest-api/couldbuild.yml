@@ -1,0 +1,3 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/playground-s-11-3a154328/basic-rest-api']
