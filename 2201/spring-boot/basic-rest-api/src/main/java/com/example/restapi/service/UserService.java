@@ -5,11 +5,10 @@ import com.example.restapi.entity.UserEntity;
 import com.example.restapi.exception.RecordNotFoundException;
 import com.example.restapi.model.UserDTO;
 import com.example.restapi.repository.UserRepository;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import org.springframework.stereotype.Service;
 
 @Service //injectable bean
 public class UserService {
@@ -34,6 +33,9 @@ public class UserService {
 
     public UserDTO getUserById(long id) throws RecordNotFoundException {
         UserEntity entity = userRepository.getById(id);
+        if(Objects.isNull(entity)) {
+            throw new RecordNotFoundException("No User found for this id");
+        }
         return this.mapToDTO(entity);
     }
 

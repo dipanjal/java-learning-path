@@ -1,6 +1,7 @@
 package com.example.restapi.service;
 
 import com.example.restapi.entity.UserEntity;
+import com.example.restapi.exception.RecordNotFoundException;
 import com.example.restapi.model.UserDTO;
 import com.example.restapi.repository.UserRepository;
 import java.util.List;
@@ -9,10 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
@@ -30,7 +33,7 @@ public class UserServiceTests {
     @Test
     @DisplayName("Get User Unit Test")
     public void getUsersTest() {
-        Mockito.when(userRepository.findAll())
+        when(userRepository.findAll())
                 .thenReturn(generateUserEntityList());
 
         List<UserDTO> userDTOList = userService.getUsers();
@@ -53,5 +56,13 @@ public class UserServiceTests {
                 userEntity,
                 userEntity2
         );
+    }
+
+    @Test
+    @DisplayName("Get user by id: RecordNotFound exception")
+    public void getUserByIdTest_recordNotFound() {
+        when(userRepository.getById(anyLong()))
+                .thenReturn(null);
+        assertThrows(RecordNotFoundException.class, () -> userService.getUserById(1L));
     }
 }
