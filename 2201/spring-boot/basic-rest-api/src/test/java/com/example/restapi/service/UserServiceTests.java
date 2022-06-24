@@ -4,37 +4,36 @@ import com.example.restapi.entity.UserEntity;
 import com.example.restapi.model.UserDTO;
 import com.example.restapi.repository.UserRepository;
 import java.util.List;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
-import static org.assertj.core.api.Assertions.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTests {
-
     @InjectMocks
     private UserService userService;
     @Mock
     private UserRepository userRepository;
 
     @Test
+    @DisplayName("First Unit Test")
     public void test() {
         System.out.println("Test Code");
     }
 
     @Test
+    @DisplayName("Get User Unit Test")
     public void getUsersTest() {
         Mockito.when(userRepository.findAll())
                 .thenReturn(generateUserEntityList());
 
         List<UserDTO> userDTOList = userService.getUsers();
-//        Assertions.assertNotNull(userDTOList);
-//        boolean expected = !userDTOList.isEmpty();
-//        Assertions.assertTrue(expected);
         assertThat(userDTOList).isNotNull();
         assertThat(userDTOList).isNotEmpty();
     }

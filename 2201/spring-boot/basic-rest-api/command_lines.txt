@@ -45,5 +45,6 @@ create unique index users_id_uindex on users (id);
 INSERT INTO `java-2201`.users (name, email) VALUES ('Jhon Doe', 'jhon@xyz.com');
 INSERT INTO `java-2201`.users (name, email) VALUES ('Eric Clapton', 'eric@xyz.com');
 
-
-
+---------- Kloudlab --------------
+dipanjalmaitra@gmail.com
+Aziaur@1234#
