@@ -25,11 +25,11 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file ./2201/spring-boot/basic-rest-api/pom.xml
     
-    - uses: actions/checkout@v3
-    - name: Build Docker image
-      run: | 
-       ls
-       docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag basic-rest-api:latest
+    # - uses: actions/checkout@v3
+    # - name: Build Docker image
+    #   run: | 
+    #    ls
+    #    docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag basic-rest-api:latest
     
     - name: Login to DockerHub
       uses: docker/login-action@v2
@@ -37,6 +37,9 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     
-    - name: Docker push
-      run: |
-        docker push dipanjalmaitra/basic-rest-api:latest
+    - uses: actions/checkout@v3
+    - name: Build Docker image and Push to dockerhub
+      run: | 
+       ls
+       docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag basic-rest-api:latest
+       docker push dipanjalmaitra/basic-rest-api:latest
