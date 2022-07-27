@@ -27,5 +27,5 @@ jobs:
     - name: Build the Docker image
       run: | 
        ls
-       docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag my-image-name:$(date +%s)
+       docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile --tag my-image-name:$(date +%s)
     
