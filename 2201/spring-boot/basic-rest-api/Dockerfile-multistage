@@ -1,7 +1,7 @@
 # Build stage
 FROM maven:3.6.0-jdk-11-slim AS build
 COPY ./2201/spring-boot/basic-rest-api/src /home/app/src
-COPY pom.xml /home/app
+COPY ./2201/spring-boot/basic-rest-api/pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
 # Package stage
