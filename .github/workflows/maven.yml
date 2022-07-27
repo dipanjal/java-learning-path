@@ -22,4 +22,10 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file ./2201/spring-boot/basic-rest-api/pom.xml
+      
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: | 
+       ls
+       docker build . --file Dockerfile --tag my-image-name:$(date +%s)
     
