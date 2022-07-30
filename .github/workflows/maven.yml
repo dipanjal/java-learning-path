@@ -56,5 +56,5 @@ jobs:
       with:
         file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
         push: true
-        tags: dipanjalmaitra/basic-rest-api:${{ steps.vars.outputs.tag_id }}
-        # tags: dipanjalmaitra/simple-rest-api:${{ github.sha }}
+        # tags: dipanjalmaitra/basic-rest-api:${{ steps.vars.outputs.tag_id }}
+        tags: dipanjalmaitra/simple-rest-api:${{ github.sha }}
