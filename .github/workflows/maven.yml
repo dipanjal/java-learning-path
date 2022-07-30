@@ -25,28 +25,34 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file ./2201/spring-boot/basic-rest-api/pom.xml
     
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+    - name: Show output
+      run: echo ${{ steps.vars.outputs.sha_short }}
+    
     # - uses: actions/checkout@v3
     # - name: Build Docker image
     #   run: | 
     #    ls
     #    docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag basic-rest-api:latest
     
-    - name: Login to DockerHub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    # - name: Login to DockerHub
+    #   uses: docker/login-action@v2
+    #   with:
+    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+    #     password: ${{ secrets.DOCKERHUB_TOKEN }}
     
     # - uses: actions/checkout@v3
     # - name: Build Docker image and Push to dockerhub
     #   run: | 
     #    ls
     #    docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag basic-rest-api:latest
-    #    docker push dipanjalmaitra/basic-rest-api:latest
+    #    docker push dipanjalmaitra/basic-rest-api:${{ github.sha }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v3
-      with:
-        file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
-        push: true
-        tags: dipanjalmaitra/basic-rest-api:${{ github.sha }}
+    # - name: Build and push
+    #   uses: docker/build-push-action@v3
+    #   with:
+    #     file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
+    #     push: true
+    #     tags: dipanjalmaitra/basic-rest-api:${{ github.sha }}
