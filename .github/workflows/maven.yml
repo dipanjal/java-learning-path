@@ -25,11 +25,18 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file ./2201/spring-boot/basic-rest-api/pom.xml
     
-    - name: Set outputs
+    - name: Generate Tag ID
       id: vars
-      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-    - name: Show output
-      run: echo ${{ secrets.DOCKERHUB_USERNAME }}/basic-rest-api:${{ steps.vars.outputs.sha_short }}
+      run: echo "::set-output name=tag_id::$(git rev-parse --short HEAD)"
+    - name: check tag 
+      run: echo ${{ steps.vars.outputs.tag_id }}
+    
+    - name: Tag Image with Tag Id
+      run: | 
+        echo "::set-output name=image_name:: ${{ secrets.DOCKERHUB_USERNAME }}/basic-rest-api:${{ steps.vars.outputs.tag_id }}"
+    
+    - name: check image with tag output
+      run: echo run: echo ${{ steps.vars.outputs.image_name }}
     
     # - uses: actions/checkout@v3
     # - name: Build Docker image
