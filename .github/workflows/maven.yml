@@ -27,10 +27,9 @@ jobs:
     
     - name: Generate Tag ID
       id: vars
-      run: | 
-        echo "::set-output name=tag_id::$(git rev-parse --short HEAD)"
+      run: echo "::set-output name=tag_id::$(git rev-parse --short HEAD)"
     
-    - name: check tag 
+    - name: Check Tag
       run: echo ${{ steps.vars.outputs.tag_id }}
     
     # - uses: actions/checkout@v3
@@ -57,4 +56,5 @@ jobs:
       with:
         file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
         push: true
-        tags: dipanjalmaitra/basic-rest-api:${{ steps.vars.outputs.tag_id }}
+        # tags: dipanjalmaitra/basic-rest-api:${{ steps.vars.outputs.tag_id }}
+        tags: dipanjalmaitra/basic-rest-api:${{ github.sha }}
