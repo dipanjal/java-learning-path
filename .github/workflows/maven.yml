@@ -57,4 +57,4 @@ jobs:
       with:
         file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/basic-rest-api:${{ steps.vars.outputs.tag_id }}
+        tags: dipanjalmaitra/basic-rest-api:${{ steps.vars.outputs.tag_id }}
