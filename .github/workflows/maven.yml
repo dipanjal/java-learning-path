@@ -44,17 +44,17 @@ jobs:
     #     username: ${{ secrets.DOCKERHUB_USERNAME }}
     #     password: ${{ secrets.DOCKERHUB_TOKEN }}
     
-    # - uses: actions/checkout@v3
-    # - name: Build Docker image and Push to dockerhub
-    #   run: | 
-    #    ls
-    #    docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag basic-rest-api:latest
-    #    docker push dipanjalmaitra/basic-rest-api:${{ github.sha }}
+    - uses: actions/checkout@v3
+    - name: Build Docker image and Push to dockerhub
+      run: | 
+       ls
+       docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag basic-rest-api:${{ github.sha }}
+       docker push dipanjalmaitra/basic-rest-api:${{ github.sha }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v3
-      with:
-        file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
-        push: true
-        # tags: dipanjalmaitra/basic-rest-api:${{ steps.vars.outputs.tag_id }}
-        tags: dipanjalmaitra/simple-rest-api:${{ github.sha }}
+    # - name: Build and push
+    #   uses: docker/build-push-action@v3
+    #   with:
+    #     file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
+    #     push: true
+    #     # tags: dipanjalmaitra/basic-rest-api:${{ steps.vars.outputs.tag_id }}
+    #     tags: dipanjalmaitra/simple-rest-api:${{ github.sha }}
