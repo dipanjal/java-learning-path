@@ -29,7 +29,7 @@ jobs:
       id: vars
       run: | 
         echo "::set-output name=tag_id::$(git rev-parse --short HEAD)"
-        echo "::set-output name=image_name:: ${{ secrets.DOCKERHUB_USERNAME }}/basic-rest-api:${{ steps.vars.outputs.tag_id }}"
+        echo "::set-output name=image_name::$(${{ secrets.DOCKERHUB_USERNAME }}/basic-rest-api:${{ steps.vars.outputs.tag_id }})"
     
     - name: check tag 
       run: echo ${{ steps.vars.outputs.tag_id }}
