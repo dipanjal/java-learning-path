@@ -36,7 +36,7 @@ jobs:
         echo "::set-output name=image_name:: ${{ secrets.DOCKERHUB_USERNAME }}/basic-rest-api:${{ steps.vars.outputs.tag_id }}"
     
     - name: check image with tag output
-      run: echo run: echo ${{ steps.vars.outputs.image_name }}
+      run: echo ${{ steps.vars.outputs.image_name }}
     
     # - uses: actions/checkout@v3
     # - name: Build Docker image
