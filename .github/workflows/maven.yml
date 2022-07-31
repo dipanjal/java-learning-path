@@ -27,50 +27,15 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file ./2201/spring-boot/basic-rest-api/pom.xml
     
-    - name: Generate Image Name with Tag
-      id: vars
-      env:
-        REPOSITORY_URL: dipanjalmaitra/basic-rest-api
-        TAG_ID: ${{ github.sha }}
-      # run: echo "::set-output name=tag_id::$(git rev-parse --short HEAD)"
-      run: echo "::set-output name=image_name::$REPOSITORY_URL:$TAG_ID"
-    
-    - name: Check Tag
-      run: echo ${{ steps.vars.outputs.image_name }}
-    
     - name: Login to DockerHub
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    
-    # - uses: actions/checkout@v3
-    # - name: Build Docker image and Push to dockerhub
-    #   run: | 
-    #    ls
-    #    docker build . --file ./2201/spring-boot/basic-rest-api/Dockerfile-multistage --tag dipanjalmaitra/basic-test:${{ github.sha }}
-    #    docker push dipanjalmaitra/basic-test:${{ github.sha }}
 
     - name: Build and push
       uses: docker/build-push-action@v3
       with:
         file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
         push: true
-        tags: ${{ steps.vars.outputs.image_name }}
-    
-
-    - name: Run docker container
-      uses: appleboy/ssh-action@master
-      env:
-        CONTAINER_NAME: basic-rest-api
-        IMAGE_NAME: ${{ steps.vars.outputs.image_name }}
-        DB_URL: jdbc:mysql://172.18.0.2:3306/java-2201
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        script: |
-          docker stop ${{ env.CONTAINER_NAME }}
-          docker container rm ${{ env.CONTAINER_NAME }}
-          docker run -d --name ${{ env.CONTAINER_NAME }} --network common-net --publish 8080:8080 -e DB_URL=${{ env.DB_URL }} ${{ env.IMAGE_NAME }}
+        tags: dipanjalmaitra/basic-rest-api:latest
