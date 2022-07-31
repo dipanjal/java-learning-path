@@ -36,29 +36,33 @@ jobs:
         TAG_ID: ${{ github.sha }}
       run: echo "::set-output name=image_name::$REPOSITORY_URL:$TAG_ID"
     
-    - name: Check output
-      run: echo ${{ steps.vars.outputs.image_name }}
+    # - name: Check output
+    #   run: echo ${{ steps.vars.outputs.image_name }}
 
-    # - name: Login to DockerHub
-    #   uses: docker/login-action@v2
-    #   with:
-    #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-    #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    # - name: Build and push
-    #   uses: docker/build-push-action@v3
-    #   with:
-    #     file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
-    #     push: true
-    #     tags: dipanjalmaitra/basic-rest-api:${{ github.sha }}
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
+        push: true
+        tags: ${{ steps.vars.outputs.image_name }}
     
     # --------- Continuous Deployment -----------
-    # - name: Run container to EC2
-    #   uses: appleboy/ssh-action@master
-    #   with:
-    #     host: ${{ secrets.SSH_HOST }}
-    #     username: ${{ secrets.SSH_USER }}
-    #     key: ${{ secrets.SSH_PRIVATE_KEY }}
-    #     port: ${{ secrets.SSH_PORT }}
-    #     script: |
-    #       docker run -d --name basic-rest-api --network common-net --publish 8080:8080 -e DB_URL=jdbc:mysql://172.18.0.2:3306/java-2201 dipanjalmaitra/basic-rest-api:${{ github.sha }}
+    - name: Run container to EC2
+      uses: appleboy/ssh-action@master
+      env:
+        CONTAINER_NAME: basic-rest-api
+        IMAGE_NAME: ${{ steps.vars.outputs.image_name }}
+        DB_URL: jdbc:mysql://172.18.0.2:3306/java-2201
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          docker run -d --name ${{ env.CONTAINER_NAME }} --network common-net --publish 8080:8080 -e DB_URL=${{ DB_URL }} ${{ IMAGE_NAME }}
