@@ -60,11 +60,12 @@ jobs:
 
     - name: Restart Node Server
       uses: appleboy/ssh-action@master
+      # env:
+      #   IMAGE_NAME: ${{ steps.vars.outputs.image_name }}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: 22
+        port: ${{ secrets.SSH_PORT }}
         script: |
-          cd ~
-          mkdir remote-kontrol
+          docker network create common-net
