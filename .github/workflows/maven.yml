@@ -60,12 +60,15 @@ jobs:
 
     - name: Restart Node Server
       uses: appleboy/ssh-action@master
-      # env:
-      #   IMAGE_NAME: ${{ steps.vars.outputs.image_name }}
+      env:
+        # IMAGE_NAME: ${{ steps.vars.outputs.image_name }}
+        IMAGE_NAME: dipanjalmaitra/basic-rest-api:eb1815fff3ce33229eb7d1adfaac5233117df780
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          docker network create common-net
+          docker stop basic-rest-api
+          docker container rm basic-rest-api
+          docker run -d --name basic-rest-api --network common-net --publish 8080:8080 -e DB_URL=jdbc:mysql://172.18.0.2:3306/java-2201 $IMAGE_NAME
