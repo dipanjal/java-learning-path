@@ -65,4 +65,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          docker run -d --name ${{ env.CONTAINER_NAME }} --network common-net --publish 8080:8080 -e DB_URL=${{ DB_URL }} ${{ IMAGE_NAME }}
+          docker run -d --name ${{ env.CONTAINER_NAME }} --network common-net --publish 8080:8080 -e DB_URL=${{ env.DB_URL }} ${{ env.IMAGE_NAME }}
