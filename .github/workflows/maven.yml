@@ -57,12 +57,13 @@ jobs:
     #     # tags: dipanjalmaitra/simple-rest-api:${{ github.sha }}
     #     tags: ${{ steps.vars.outputs.image_name }}
     
-      - name: Restart Node Server
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_PRIVATE_KEY }}
-            port: ${{ secrets.SSH_PORT }}
-            script: |
-              whoami
+
+    - uses: appleboy/ssh-action@master
+    - name: Restart Node Server
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          whoami
