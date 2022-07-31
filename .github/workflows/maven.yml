@@ -1,21 +1,22 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Java CI with Maven
+name: Java CI/CD with Maven
 
 on:
   push:
     branches: 
       - "main"
-  pull_request:
-    branches: 
-      - "main"
+  # pull_request:
+  #   branches: 
+  #     - "main"
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
+    # ------ CI -------
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
@@ -27,6 +28,7 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file ./2201/spring-boot/basic-rest-api/pom.xml
     
+    # --------- Continuous Delivery -----------
     - name: Login to DockerHub
       uses: docker/login-action@v2
       with:
@@ -39,3 +41,5 @@ jobs:
         file: ./2201/spring-boot/basic-rest-api/Dockerfile-multistage
         push: true
         tags: dipanjalmaitra/basic-rest-api:latest
+    
+    # --------- Continuous Deployment -----------
