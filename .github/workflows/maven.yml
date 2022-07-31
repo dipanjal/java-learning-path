@@ -58,8 +58,8 @@ jobs:
     #     tags: ${{ steps.vars.outputs.image_name }}
     
 
-    - uses: appleboy/ssh-action@master
     - name: Restart Node Server
+    - uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
