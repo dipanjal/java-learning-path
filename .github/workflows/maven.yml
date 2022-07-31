@@ -69,7 +69,7 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        run: |
+        script: |
           echo image name ${{ env.IMAGE_NAME }}
           # echo "docker container rm $IMAGE_NAME"
           # echo "docker run -d --name $IMAGE_NAME --network common-net --publish 8080:8080 -e DB_URL=jdbc:mysql://172.18.0.2:3306/java-2201 $IMAGE_NAME:$TAG"
