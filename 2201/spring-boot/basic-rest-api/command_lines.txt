@@ -38,12 +38,17 @@ create table users
     id    bigint auto_increment,
     name  varchar(255) null,
     email varchar(255) null,
+    username varchar(255) null,
     constraint users_pk
         primary key (id)
 );
 create unique index users_id_uindex on users (id);
-INSERT INTO `java-2201`.users (name, email) VALUES ('Jhon Doe', 'jhon@xyz.com');
-INSERT INTO `java-2201`.users (name, email) VALUES ('Eric Clapton', 'eric@xyz.com');
+
+INSERT INTO `java-2201`.users (name, email) VALUES ('John Doe', 'jhon@xyz.com', 'john');
+INSERT INTO `java-2201`.users (name, email) VALUES ('Eric Clapton', 'eric@xyz.com', 'eric');
+
+alter table users
+    add username varchar(255) null;
 
 ---------- Kloudlab --------------
 dipanjalmaitra@gmail.com
