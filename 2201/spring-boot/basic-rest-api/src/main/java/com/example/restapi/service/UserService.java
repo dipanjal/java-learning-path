@@ -2,22 +2,30 @@ package com.example.restapi.service;
 
 import com.example.restapi.aop.EnableLogging;
 import com.example.restapi.entity.UserEntity;
+import com.example.restapi.exception.InvalidArgumentException;
 import com.example.restapi.exception.RecordNotFoundException;
 import com.example.restapi.model.UserDTO;
 import com.example.restapi.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
 
-@Service //injectable bean
+@Service
+@RequiredArgsConstructor
 public class UserService {
-
+    private final RestTemplate restTemplate;
     private final UserRepository userRepository;
 
+    @Value("${user-service.baseurl}")
+    private String userServiceBaseUrl;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @EnableLogging
     public List<UserDTO> getUsers() {
@@ -35,6 +43,27 @@ public class UserService {
                 userRepository.findById(id)
                         .orElseThrow(() -> new RecordNotFoundException("No User found for this id"))
         );
+    }
+
+    public UserDTO fetchUserById(long id) throws RecordNotFoundException {
+        if(id < 1)
+            throw new InvalidArgumentException("Invalid User id");
+
+        ResponseEntity <List<UserDTO>> response = restTemplate.exchange(
+                userServiceBaseUrl+"/users",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
+        );
+
+        List<UserDTO> userDTOList = response.getBody();
+        if(CollectionUtils.isEmpty(userDTOList))
+            throw new RecordNotFoundException("User not found");
+
+        return userDTOList.stream()
+                .filter(userDTO -> userDTO.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new RecordNotFoundException("User not found"));
     }
 
     private UserDTO mapToDTO(UserEntity entity) {

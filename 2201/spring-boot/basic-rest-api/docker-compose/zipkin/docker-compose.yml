@@ -1,0 +1,28 @@
+version: '3'
+services:
+  zipkin-storage:
+    image: mysql:5.7
+    container_name: zipkin-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: zipkin
+    volumes:
+      - zipkin-mysql-data:/var/lib/mysql
+      - ./DDL.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "3306:3306"
+  zipkin-server:
+    depends_on:
+      - zipkin-storage
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      STORAGE_TYPE: mysql
+      MYSQL_USER: root
+      MYSQL_PASS: root
+      MYSQL_JDBC_URL: jdbc:mysql://zipkin-storage:3306/zipkin
+
+volumes:
+  zipkin-mysql-data: {}
