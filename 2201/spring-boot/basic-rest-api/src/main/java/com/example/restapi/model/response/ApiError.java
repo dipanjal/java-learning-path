@@ -1,11 +1,12 @@
 package com.example.restapi.model.response;
 
-public class ApiError {
-    int code;
-    String message;
+import java.util.List;
+import lombok.Builder;
+import lombok.Getter;
 
-    public ApiError(int code, String message) {
-        this.code = code;
-        this.message = message;
-    }
+@Getter
+@Builder(toBuilder = true)
+public class ApiError<T> {
+    int code;
+    List<T> errors;
 }

@@ -5,7 +5,6 @@ import com.example.restapi.entity.UserEntity;
 import com.example.restapi.enums.UserRoleEnum;
 import com.example.restapi.repository.RoleRepository;
 import com.example.restapi.repository.UserRepository;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -84,15 +83,19 @@ public class ApplicationSeeder implements ApplicationListener<ContextRefreshedEv
                 .collect(Collectors.toSet());
 
         Set<RoleEntity> availableRoles = roleRepository.findByIdIn(roleIds);
-        List<UserEntity> userWithMultipleRoles = userRepository.findByRolesIn(availableRoles).stream()
+        List<UserEntity> userWithMultipleRoles = getMultiRoleUsers(availableRoles);
+
+        return userWithMultipleRoles.isEmpty()
+                ? Optional.of(userRepository.save(
+                new UserEntity("admin3", "admin3", "", "", availableRoles)
+        ))
+                : Optional.empty();
+    }
+
+    private List<UserEntity> getMultiRoleUsers(Set<RoleEntity> availableRoles) {
+        return userRepository.findByRolesIn(availableRoles).stream()
                 .filter(uEntity -> uEntity.getRoles().size() > 1)
                 .collect(Collectors.toList());
-
-        return !userWithMultipleRoles.isEmpty()
-                ? Optional.empty()
-                : Optional.of(userRepository.save(
-                        new UserEntity("admin3", "admin3", "", "", availableRoles)
-                ));
     }
 
     private Optional<RoleEntity> findByRoleEnum(List<RoleEntity> roleEntities, UserRoleEnum roleEnum) {

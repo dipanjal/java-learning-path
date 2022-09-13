@@ -20,3 +20,13 @@ spring:
 #    user:
 #      name: jhon
 #      password: jhon
+
+application:
+  request-id-header: request-id
+  token-expiry-minute: 30
+  token-prefix: Bearer
+  jwt-secret: dipAnj@L
+  auth-header-name: Authorization
+  token-validation-regex: ^Bearer\s[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$
+  seeder-enabled: true
+  api-version: 0.0.1
